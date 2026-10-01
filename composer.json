@@ -1,0 +1,27 @@
+{
+    "name": "dk-product-label/dk-product-label",
+    "description": "dk-product-label/dk-product-label",
+    "type": "shopware-platform-plugin",
+    "version": "0.1.0",
+    "license": "MIT",
+    "require": {
+        "shopware/core": "~6.7.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "Dk\\ProductLabel\\DkProductLabel",
+        "label": {
+            "de-DE": "Skeleton plugin",
+            "en-GB": "Skeleton plugin"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Dk\\ProductLabel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dk\\ProductLabel\\Tests\\": "tests/"
+        }
+    }
+}
