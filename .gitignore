@@ -3,3 +3,11 @@
 /src/Resources/app/administration/src/.vite
 /src/Resources/public/
 /vendor
+/tools/vendor/
+/tools/composer.lock
+/src/Resources/app/storefront/node_modules/
+/var/
+.phpunit.cache/
+.php-cs-fixer.cache
+.idea/
+.vscode/
