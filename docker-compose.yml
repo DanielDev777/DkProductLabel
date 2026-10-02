@@ -1,0 +1,23 @@
+services:
+  shop:
+    image: dockware/shopware:6.7.14.2
+    container_name: dk-product-label-shop
+    ports:
+      - "80:80"
+      - "3306:3306"
+      - "8888:8888"   # admin watcher
+      - "9998:9998"   # storefront watcher
+      - "9999:9999"
+    volumes:
+      - "./:/var/www/html/custom/plugins/DkProductLabel"
+      - "db_data:/var/lib/mysql"
+    environment:
+      - XDEBUG_ENABLED=0
+    networks:
+      - web
+
+volumes:
+  db_data:
+
+networks:
+  web:
