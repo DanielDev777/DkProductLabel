@@ -4,6 +4,18 @@ All notable changes to this plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-10-04
+
+### Added
+- `product_label` entity with translated name, color, priority, active flag and validity period
+- ManyToMany association between labels and products, available on products as `productLabels`
+- Server-side validation that label colors are hex values (`#RRGGBB`)
+- Plugin tables are removed on uninstall unless "keep user data" is selected
+- Integration test for writing and reading labels through the DAL
+
+### Changed
+- Line endings are enforced as LF via `.gitattributes`
+
 ## [0.1.1] - 2026-10-02
 
 ### Added
