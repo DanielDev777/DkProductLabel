@@ -24,7 +24,7 @@ class ProductLabelExtension extends EntityExtension
                 ProductLabelProductDefinition::class,
                 'product_id',
                 'product_label_id',
-            ))->addFlags(new ApiAware(), new CascadeDelete())
+            ))->addFlags(new ApiAware(), new CascadeDelete()),
         );
     }
 
