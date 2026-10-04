@@ -6,6 +6,7 @@ namespace Dk\ProductLabel\Tests\Unit\Storefront\Subscriber;
 
 use Dk\ProductLabel\Storefront\Subscriber\ProductLabelCriteriaSubscriber;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductSearchCriteriaEvent;
@@ -81,20 +82,33 @@ class ProductLabelCriteriaSubscriberTest extends TestCase
         );
     }
 
-    public function testListingEventCriteriaGetsLabelAssociation(): void
+    /**
+     * @return iterable<string, array{\Closure(Criteria, SalesChannelContext): (ProductPageCriteriaEvent|ProductListingCriteriaEvent)}>
+     */
+    public static function criteriaEventProvider(): iterable
     {
-        $criteria = new Criteria();
-        $event = new ProductListingCriteriaEvent(new Request(), $criteria, $this->createStub(SalesChannelContext::class));
-
-        (new ProductLabelCriteriaSubscriber(new MockClock()))->onProductCriteria($event);
-
-        static::assertTrue($criteria->hasAssociation('productLabels'));
+        yield 'product detail page' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductPageCriteriaEvent('product-id', $criteria, $context),
+        ];
+        yield 'product listing' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductListingCriteriaEvent(new Request(), $criteria, $context),
+        ];
+        yield 'search' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductSearchCriteriaEvent(new Request(), $criteria, $context),
+        ];
+        yield 'search suggest' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductSuggestCriteriaEvent(new Request(), $criteria, $context),
+        ];
     }
 
-    public function testProductPageEventCriteriaGetsLabelAssociation(): void
+    /**
+     * @param \Closure(Criteria, SalesChannelContext): (ProductPageCriteriaEvent|ProductListingCriteriaEvent) $createEvent
+     */
+    #[DataProvider('criteriaEventProvider')]
+    public function testCriteriaEventGetsLabelAssociation(\Closure $createEvent): void
     {
         $criteria = new Criteria();
-        $event = new ProductPageCriteriaEvent('product-id', $criteria, $this->createStub(SalesChannelContext::class));
+        $event = $createEvent($criteria, $this->createStub(SalesChannelContext::class));
 
         (new ProductLabelCriteriaSubscriber(new MockClock()))->onProductCriteria($event);
 

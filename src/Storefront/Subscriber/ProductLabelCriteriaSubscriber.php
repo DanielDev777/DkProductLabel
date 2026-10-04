@@ -46,14 +46,19 @@ class ProductLabelCriteriaSubscriber implements EventSubscriberInterface
 
         $criteria->getAssociation('productLabels')
             ->addFilter(new EqualsFilter('active', true))
-            ->addFilter(new MultiFilter(MultiFilter::CONNECTION_OR, [
-                new EqualsFilter('validFrom', null),
-                new RangeFilter('validFrom', [RangeFilter::LTE => $now]),
-            ]))
-            ->addFilter(new MultiFilter(MultiFilter::CONNECTION_OR, [
-                new EqualsFilter('validTo', null),
-                new RangeFilter('validTo', [RangeFilter::GTE => $now]),
-            ]))
+            ->addFilter($this->openEndedRange('validFrom', RangeFilter::LTE, $now))
+            ->addFilter($this->openEndedRange('validTo', RangeFilter::GTE, $now))
             ->addSorting(new FieldSorting('priority', FieldSorting::DESCENDING));
+    }
+
+    /**
+     * @param RangeFilter::LTE|RangeFilter::GTE $operator
+     */
+    private function openEndedRange(string $field, string $operator, string $value): MultiFilter
+    {
+        return new MultiFilter(MultiFilter::CONNECTION_OR, [
+            new EqualsFilter($field, null),
+            new RangeFilter($field, [$operator => $value]),
+        ]);
     }
 }
