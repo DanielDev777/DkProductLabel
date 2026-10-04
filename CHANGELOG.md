@@ -4,6 +4,13 @@ All notable changes to this plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-10-04
+
+### Added
+- Administration module under Catalogues to list, create and edit labels
+- "Labels" tab on the product detail page to assign and remove labels
+- Administration snippets (en-GB, de-DE)
+
 ## [0.3.0] - 2026-10-04
 
 ### Added
