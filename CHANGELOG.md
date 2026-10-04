@@ -4,6 +4,19 @@ All notable changes to this plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.0] - 2026-10-04
+
+### Added
+- Labels are also shown in cross-selling and CMS product sliders
+- GitHub Actions workflow for code style, static analysis, tests and an install check
+- README with setup instructions and design decisions
+
+### Changed
+- Validator and storefront subscriber split into smaller methods
+
+### Fixed
+- Empty state in the administration label list is centered
+
 ## [0.4.0] - 2026-10-04
 
 ### Added
