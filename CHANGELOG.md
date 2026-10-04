@@ -4,6 +4,15 @@ All notable changes to this plugin are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-10-04
+
+### Added
+- Labels are shown on the product box (listing, search) and on the product detail page
+- Only active labels within their validity period are loaded, sorted by priority
+- SCSS component for the labels
+- Storefront snippets (en-GB, de-DE)
+- Unit tests for the storefront subscriber
+
 ## [0.2.0] - 2026-10-04
 
 ### Added
