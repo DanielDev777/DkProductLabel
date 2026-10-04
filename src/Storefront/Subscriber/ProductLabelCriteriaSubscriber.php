@@ -17,10 +17,6 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Storefront\Page\Product\ProductPageCriteriaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * Adds the product labels to every storefront product query (detail page, listing, search, suggest),
- * already filtered to active, currently valid labels and sorted by priority, so templates only render.
- */
 class ProductLabelCriteriaSubscriber implements EventSubscriberInterface
 {
     public function __construct(

@@ -1,0 +1,10 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget.html.twig' %}
+
+{% block buy_widget_price %}
+    {% sw_include '@DkProductLabel/storefront/component/product-label/labels.html.twig' with {
+        labels: product.extensions.productLabels ?? null,
+        modifier: 'detail',
+    } %}
+
+    {{ parent() }}
+{% endblock %}

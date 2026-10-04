@@ -1,0 +1,14 @@
+{% block dk_product_labels %}
+    {% if labels is not empty %}
+        <ul class="dk-product-labels dk-product-labels--{{ modifier|default('box') }}"
+            aria-label="{{ 'dkProductLabel.listLabel'|trans|sw_sanitize }}">
+            {% for label in labels %}
+                {% block dk_product_labels_item %}
+                    <li class="dk-product-label" style="--dk-product-label-color: {{ label.color }};">
+                        {{ label.translated.name }}
+                    </li>
+                {% endblock %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
