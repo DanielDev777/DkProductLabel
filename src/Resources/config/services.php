@@ -7,7 +7,10 @@ use Dk\ProductLabel\Core\Content\ProductLabel\Aggregate\ProductLabelProduct\Prod
 use Dk\ProductLabel\Core\Content\ProductLabel\Aggregate\ProductLabelTranslation\ProductLabelTranslationDefinition;
 use Dk\ProductLabel\Core\Content\ProductLabel\ProductLabelDefinition;
 use Dk\ProductLabel\Core\Content\ProductLabel\Validation\ProductLabelColorValidator;
+use Dk\ProductLabel\Storefront\Subscriber\ProductLabelCriteriaSubscriber;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
@@ -23,5 +26,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('shopware.entity.extension');
 
     $services->set(ProductLabelColorValidator::class)
+        ->tag('kernel.event_subscriber');
+
+    $services->set(ProductLabelCriteriaSubscriber::class)
+        ->args([service('clock')])
         ->tag('kernel.event_subscriber');
 };
