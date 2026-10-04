@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXTENSION_NAME: DkProductLabel
+  SHOPWARE_VERSION: v6.7.14.2
+
+jobs:
+  cs-fixer:
+    name: PHP-CS-Fixer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Install tools
+        run: composer --working-dir=tools install --no-interaction --no-progress
+
+      - name: Check code style
+        run: tools/vendor/bin/php-cs-fixer fix --dry-run --diff
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ${{ env.EXTENSION_NAME }}
+          shopwareVersion: ${{ env.SHOPWARE_VERSION }}
+
+      - name: Install tools
+        working-directory: custom/plugins/${{ env.EXTENSION_NAME }}
+        run: composer --working-dir=tools install --no-interaction --no-progress
+
+      - name: Analyse
+        working-directory: custom/plugins/${{ env.EXTENSION_NAME }}
+        run: tools/vendor/bin/phpstan analyse --no-progress --error-format=github --memory-limit=1G
+
+  phpunit:
+    name: PHPUnit and plugin lifecycle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ${{ env.EXTENSION_NAME }}
+          shopwareVersion: ${{ env.SHOPWARE_VERSION }}
+          install: true
+
+      - name: Check that the plugin is installed and active
+        run: |
+          php bin/console plugin:list --format json --filter "$EXTENSION_NAME" > plugins.json
+          php -r '
+            $plugin = json_decode(file_get_contents("plugins.json"), true)[0] ?? null;
+            if ($plugin === null || $plugin["installedAt"] === null || $plugin["active"] !== true) {
+                fwrite(STDERR, "Plugin is not installed and active\n");
+                exit(1);
+            }
+            echo $plugin["name"] . " " . $plugin["version"] . " is installed and active\n";
+          '
+
+      - name: Reinstall the plugin
+        run: php bin/console plugin:install --activate --reinstall "$EXTENSION_NAME"
+
+      - name: Run tests
+        working-directory: custom/plugins/${{ env.EXTENSION_NAME }}
+        run: ../../../vendor/bin/phpunit
