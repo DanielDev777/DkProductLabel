@@ -28,6 +28,13 @@
             "labelValidFrom": "Valid from",
             "labelValidTo": "Valid to",
             "messageSaveError": "The label could not be saved."
+        },
+        "productTab": {
+            "title": "Labels",
+            "cardTitle": "Product labels",
+            "labelSelect": "Labels",
+            "placeholderSelect": "Select labels...",
+            "helpTextSelect": "Only active labels within their validity period are shown in the storefront."
         }
     }
 }

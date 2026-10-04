@@ -1,0 +1,19 @@
+{% block dk_product_detail_labels %}
+<mt-card
+    class="dk-product-detail-labels"
+    position-identifier="dk-product-detail-labels"
+    :title="$t('dk-product-label.productTab.cardTitle')"
+    :is-loading="isLoading"
+>
+    {% block dk_product_detail_labels_select %}
+    <sw-entity-multi-select
+        v-if="product?.extensions?.productLabels"
+        v-model:entity-collection="product.extensions.productLabels"
+        entity-name="product_label"
+        :label="$t('dk-product-label.productTab.labelSelect')"
+        :placeholder="$t('dk-product-label.productTab.placeholderSelect')"
+        :help-text="$t('dk-product-label.productTab.helpTextSelect')"
+    />
+    {% endblock %}
+</mt-card>
+{% endblock %}

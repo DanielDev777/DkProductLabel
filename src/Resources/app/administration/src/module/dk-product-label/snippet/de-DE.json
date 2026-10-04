@@ -28,6 +28,13 @@
             "labelValidFrom": "Gültig ab",
             "labelValidTo": "Gültig bis",
             "messageSaveError": "Das Label konnte nicht gespeichert werden."
+        },
+        "productTab": {
+            "title": "Labels",
+            "cardTitle": "Produkt-Labels",
+            "labelSelect": "Labels",
+            "placeholderSelect": "Labels auswählen...",
+            "helpTextSelect": "In der Storefront werden nur aktive Labels innerhalb ihres Gültigkeitszeitraums angezeigt."
         }
     }
 }

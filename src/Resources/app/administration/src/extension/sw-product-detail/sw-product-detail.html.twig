@@ -1,0 +1,11 @@
+{% block sw_product_detail_content_tabs_additional %}
+    {% parent %}
+
+    <sw-tabs-item
+        class="dk-product-detail__tab-labels"
+        :route="{ name: 'sw.product.detail.dkProductLabels', params: { id: $route.params.id } }"
+        :title="$t('dk-product-label.productTab.title')"
+    >
+        {{ $t('dk-product-label.productTab.title') }}
+    </sw-tabs-item>
+{% endblock %}
