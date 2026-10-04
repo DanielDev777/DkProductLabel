@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Dk\ProductLabel\Storefront\Subscriber;
 
 use Psr\Clock\ClockInterface;
+use Shopware\Core\Content\Product\Events\ProductCrossSellingCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductCrossSellingIdsCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductCrossSellingStreamCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductSearchCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductSliderStaticCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductSliderStreamCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductSuggestCriteriaEvent;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -30,12 +35,22 @@ class ProductLabelCriteriaSubscriber implements EventSubscriberInterface
             ProductListingCriteriaEvent::class => 'onProductCriteria',
             ProductSearchCriteriaEvent::class => 'onProductCriteria',
             ProductSuggestCriteriaEvent::class => 'onProductCriteria',
+            ProductCrossSellingIdsCriteriaEvent::class => 'onProductCriteria',
+            ProductCrossSellingStreamCriteriaEvent::class => 'onProductCriteria',
+            ProductSliderStaticCriteriaEvent::class => 'onProductSliderCriteria',
+            ProductSliderStreamCriteriaEvent::class => 'onProductSliderCriteria',
         ];
     }
 
-    public function onProductCriteria(ProductPageCriteriaEvent|ProductListingCriteriaEvent $event): void
-    {
+    public function onProductCriteria(
+        ProductPageCriteriaEvent|ProductListingCriteriaEvent|ProductCrossSellingCriteriaEvent $event,
+    ): void {
         $this->addLabelAssociation($event->getCriteria());
+    }
+
+    public function onProductSliderCriteria(ProductSliderStaticCriteriaEvent|ProductSliderStreamCriteriaEvent $event): void
+    {
+        $this->addLabelAssociation($event->criteria);
     }
 
     public function addLabelAssociation(Criteria $criteria): void

@@ -8,8 +8,14 @@ use Dk\ProductLabel\Storefront\Subscriber\ProductLabelCriteriaSubscriber;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Shopware\Core\Content\Cms\Aggregate\CmsSlot\CmsSlotEntity;
+use Shopware\Core\Content\Product\Aggregate\ProductCrossSelling\ProductCrossSellingEntity;
+use Shopware\Core\Content\Product\Events\ProductCrossSellingIdsCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductCrossSellingStreamCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductListingCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductSearchCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductSliderStaticCriteriaEvent;
+use Shopware\Core\Content\Product\Events\ProductSliderStreamCriteriaEvent;
 use Shopware\Core\Content\Product\Events\ProductSuggestCriteriaEvent;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
@@ -24,19 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 #[CoversClass(ProductLabelCriteriaSubscriber::class)]
 class ProductLabelCriteriaSubscriberTest extends TestCase
 {
-    public function testSubscribesToAllStorefrontProductCriteriaEvents(): void
-    {
-        static::assertSame(
-            [
-                ProductPageCriteriaEvent::class,
-                ProductListingCriteriaEvent::class,
-                ProductSearchCriteriaEvent::class,
-                ProductSuggestCriteriaEvent::class,
-            ],
-            array_keys(ProductLabelCriteriaSubscriber::getSubscribedEvents()),
-        );
-    }
-
     public function testAddsOnlyActiveAndCurrentlyValidLabelsSortedByPriority(): void
     {
         $subscriber = new ProductLabelCriteriaSubscriber(new MockClock('2026-10-01 12:00:00', 'UTC'));
@@ -83,7 +76,7 @@ class ProductLabelCriteriaSubscriberTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{\Closure(Criteria, SalesChannelContext): (ProductPageCriteriaEvent|ProductListingCriteriaEvent)}>
+     * @return iterable<string, array{\Closure(Criteria, SalesChannelContext): object}>
      */
     public static function criteriaEventProvider(): iterable
     {
@@ -99,18 +92,31 @@ class ProductLabelCriteriaSubscriberTest extends TestCase
         yield 'search suggest' => [
             static fn(Criteria $criteria, SalesChannelContext $context) => new ProductSuggestCriteriaEvent(new Request(), $criteria, $context),
         ];
+        yield 'cross selling by ids' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductCrossSellingIdsCriteriaEvent(new ProductCrossSellingEntity(), $criteria, $context),
+        ];
+        yield 'cross selling by stream' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductCrossSellingStreamCriteriaEvent(new ProductCrossSellingEntity(), $criteria, $context),
+        ];
+        yield 'static product slider' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductSliderStaticCriteriaEvent(new CmsSlotEntity(), $criteria, $context),
+        ];
+        yield 'stream product slider' => [
+            static fn(Criteria $criteria, SalesChannelContext $context) => new ProductSliderStreamCriteriaEvent(new CmsSlotEntity(), $criteria, $context),
+        ];
     }
 
     /**
-     * @param \Closure(Criteria, SalesChannelContext): (ProductPageCriteriaEvent|ProductListingCriteriaEvent) $createEvent
+     * @param \Closure(Criteria, SalesChannelContext): object $createEvent
      */
     #[DataProvider('criteriaEventProvider')]
-    public function testCriteriaEventGetsLabelAssociation(\Closure $createEvent): void
+    public function testSubscribedEventGetsLabelAssociation(\Closure $createEvent): void
     {
         $criteria = new Criteria();
         $event = $createEvent($criteria, $this->createStub(SalesChannelContext::class));
+        $method = ProductLabelCriteriaSubscriber::getSubscribedEvents()[$event::class];
 
-        (new ProductLabelCriteriaSubscriber(new MockClock()))->onProductCriteria($event);
+        (new ProductLabelCriteriaSubscriber(new MockClock()))->$method($event);
 
         static::assertTrue($criteria->hasAssociation('productLabels'));
     }
