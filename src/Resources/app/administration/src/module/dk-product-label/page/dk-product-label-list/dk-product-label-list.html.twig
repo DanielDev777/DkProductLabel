@@ -1,0 +1,94 @@
+{% block dk_product_label_list %}
+<sw-page class="dk-product-label-list">
+    {% block dk_product_label_list_smart_bar_header %}
+    <template #smart-bar-header>
+        <h2>
+            {{ $t('dk-product-label.list.textOverview') }}
+            <span
+                v-if="!isLoading"
+                class="sw-page__smart-bar-amount"
+            >
+                ({{ total }})
+            </span>
+        </h2>
+    </template>
+    {% endblock %}
+
+    {% block dk_product_label_list_smart_bar_actions %}
+    <template #smart-bar-actions>
+        <mt-button
+            class="dk-product-label-list__add-action"
+            variant="primary"
+            size="default"
+            @click="$router.push({ name: 'dk.product.label.create' })"
+        >
+            {{ $t('dk-product-label.list.buttonAdd') }}
+        </mt-button>
+    </template>
+    {% endblock %}
+
+    {% block dk_product_label_list_language_switch %}
+    <template #language-switch>
+        <sw-language-switch @on-change="onChangeLanguage" />
+    </template>
+    {% endblock %}
+
+    <template #content>
+        {% block dk_product_label_list_content %}
+        <div class="dk-product-label-list__content">
+            {% block dk_product_label_list_empty_state %}
+            <mt-empty-state
+                v-if="!isLoading && !total"
+                :centered="true"
+                :icon="$route.meta.$module.icon"
+                :headline="$t('dk-product-label.list.emptyStateHeadline')"
+                :description="$t('dk-product-label.list.emptyStateDescription')"
+            />
+            {% endblock %}
+
+            {% block dk_product_label_list_grid %}
+            <sw-entity-listing
+                v-else
+                class="dk-product-label-list__grid"
+                detail-route="dk.product.label.detail"
+                :is-loading="isLoading"
+                :columns="productLabelColumns"
+                :repository="productLabelRepository"
+                :data-source="productLabels"
+                :criteria-limit="limit"
+                :sort-by="currentSortBy"
+                :sort-direction="sortDirection"
+                :disable-data-fetching="true"
+                identifier="dk-product-label-list"
+                @update-records="updateTotal"
+                @page-change="onPageChange"
+                @column-sort="onSortColumn"
+            >
+                {% block dk_product_label_list_grid_column_color %}
+                <template #column-color="{ item }">
+                    <span
+                        class="dk-product-label-list__color"
+                        :style="{ backgroundColor: item.color }"
+                    ></span>
+                    {{ item.color }}
+                </template>
+                {% endblock %}
+
+                {% block dk_product_label_list_grid_column_valid_from %}
+                <template #column-validFrom="{ item }">
+                    {{ item.validFrom ? dateFilter(item.validFrom) : '-' }}
+                </template>
+                {% endblock %}
+
+                {% block dk_product_label_list_grid_column_valid_to %}
+                <template #column-validTo="{ item }">
+                    {{ item.validTo ? dateFilter(item.validTo) : '-' }}
+                </template>
+                {% endblock %}
+            </sw-entity-listing>
+            {% endblock %}
+        </div>
+        {% endblock %}
+    </template>
+</sw-page>
+{% endblock %}

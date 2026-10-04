@@ -1,0 +1,33 @@
+{
+    "dk-product-label": {
+        "general": {
+            "mainMenuItemGeneral": "Produkt-Labels",
+            "descriptionTextModule": "Verwalte Labels wie \"Neu\" oder \"Sale\" und zeige sie an Produkten an"
+        },
+        "list": {
+            "textOverview": "Produkt-Labels",
+            "buttonAdd": "Label hinzufügen",
+            "columnName": "Name",
+            "columnColor": "Farbe",
+            "columnPriority": "Priorität",
+            "columnActive": "Aktiv",
+            "columnValidFrom": "Gültig ab",
+            "columnValidTo": "Gültig bis",
+            "emptyStateHeadline": "Noch keine Labels",
+            "emptyStateDescription": "Lege ein Label an, um es an deinen Produkten anzuzeigen."
+        },
+        "detail": {
+            "textHeadlineNew": "Neues Label",
+            "cardTitle": "Allgemein",
+            "labelName": "Name",
+            "placeholderName": "Namen eingeben...",
+            "labelColor": "Farbe",
+            "labelPriority": "Priorität",
+            "helpTextPriority": "Labels mit höherer Priorität werden zuerst angezeigt.",
+            "labelActive": "Aktiv",
+            "labelValidFrom": "Gültig ab",
+            "labelValidTo": "Gültig bis",
+            "messageSaveError": "Das Label konnte nicht gespeichert werden."
+        }
+    }
+}

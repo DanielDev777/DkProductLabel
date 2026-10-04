@@ -1,0 +1,129 @@
+{% block dk_product_label_detail %}
+<sw-page class="dk-product-label-detail">
+    {% block dk_product_label_detail_smart_bar_header %}
+    <template #smart-bar-header>
+        <h2>{{ identifier || $t('dk-product-label.detail.textHeadlineNew') }}</h2>
+    </template>
+    {% endblock %}
+
+    {% block dk_product_label_detail_smart_bar_actions %}
+    <template #smart-bar-actions>
+        <mt-button
+            :disabled="isLoading"
+            variant="secondary"
+            size="default"
+            @click="onCancel"
+        >
+            {{ $t('global.default.cancel') }}
+        </mt-button>
+
+        <sw-button-process
+            v-model:process-success="isSaveSuccessful"
+            class="dk-product-label-detail__save-action"
+            :is-loading="isLoading"
+            :disabled="isLoading"
+            variant="primary"
+            @click.prevent="onSave"
+        >
+            {{ $t('global.default.save') }}
+        </sw-button-process>
+    </template>
+    {% endblock %}
+
+    {% block dk_product_label_detail_language_switch %}
+    <template #language-switch>
+        <sw-language-switch
+            :disabled="!productLabelId"
+            :save-changes-function="saveOnLanguageChange"
+            :abort-change-function="abortOnLanguageChange"
+            @on-change="onChangeLanguage"
+        />
+    </template>
+    {% endblock %}
+
+    <template #content>
+        <sw-card-view>
+            {% block dk_product_label_detail_base %}
+            <mt-card
+                position-identifier="dk-product-label-detail-base"
+                :title="$t('dk-product-label.detail.cardTitle')"
+                :is-loading="isLoading"
+            >
+                <template v-if="productLabel">
+                    {% block dk_product_label_detail_field_name %}
+                    <mt-text-field
+                        v-model="productLabel.name"
+                        name="name"
+                        required
+                        :label="$t('dk-product-label.detail.labelName')"
+                        :placeholder="placeholder(productLabel, 'name', $t('dk-product-label.detail.placeholderName'))"
+                        :error="productLabelNameError"
+                    />
+                    {% endblock %}
+
+                    <sw-container
+                        columns="1fr 1fr"
+                        gap="0 30px"
+                    >
+                        {% block dk_product_label_detail_field_color %}
+                        <mt-colorpicker
+                            v-model="productLabel.color"
+                            name="color"
+                            color-output="hex"
+                            :alpha="false"
+                            required
+                            :label="$t('dk-product-label.detail.labelColor')"
+                            :error="productLabelColorError"
+                        />
+                        {% endblock %}
+
+                        {% block dk_product_label_detail_field_priority %}
+                        <mt-number-field
+                            v-model="productLabel.priority"
+                            name="priority"
+                            number-type="int"
+                            :step="1"
+                            :label="$t('dk-product-label.detail.labelPriority')"
+                            :help-text="$t('dk-product-label.detail.helpTextPriority')"
+                            :error="productLabelPriorityError"
+                        />
+                        {% endblock %}
+                    </sw-container>
+
+                    {% block dk_product_label_detail_field_active %}
+                    <mt-switch
+                        v-model="productLabel.active"
+                        name="active"
+                        :label="$t('dk-product-label.detail.labelActive')"
+                    />
+                    {% endblock %}
+
+                    <sw-container
+                        columns="1fr 1fr"
+                        gap="0 30px"
+                    >
+                        {% block dk_product_label_detail_field_valid_from %}
+                        <mt-datepicker
+                            v-model="productLabel.validFrom"
+                            name="validFrom"
+                            date-type="datetime"
+                            :label="$t('dk-product-label.detail.labelValidFrom')"
+                        />
+                        {% endblock %}
+
+                        {% block dk_product_label_detail_field_valid_to %}
+                        <mt-datepicker
+                            v-model="productLabel.validTo"
+                            name="validTo"
+                            date-type="datetime"
+                            :label="$t('dk-product-label.detail.labelValidTo')"
+                        />
+                        {% endblock %}
+                    </sw-container>
+                </template>
+            </mt-card>
+            {% endblock %}
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

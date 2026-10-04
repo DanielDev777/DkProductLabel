@@ -1,0 +1,33 @@
+{
+    "dk-product-label": {
+        "general": {
+            "mainMenuItemGeneral": "Product labels",
+            "descriptionTextModule": "Manage labels like \"New\" or \"Sale\" and show them on products"
+        },
+        "list": {
+            "textOverview": "Product labels",
+            "buttonAdd": "Add label",
+            "columnName": "Name",
+            "columnColor": "Color",
+            "columnPriority": "Priority",
+            "columnActive": "Active",
+            "columnValidFrom": "Valid from",
+            "columnValidTo": "Valid to",
+            "emptyStateHeadline": "No labels yet",
+            "emptyStateDescription": "Create a label to show it on your products."
+        },
+        "detail": {
+            "textHeadlineNew": "New label",
+            "cardTitle": "General",
+            "labelName": "Name",
+            "placeholderName": "Enter a name...",
+            "labelColor": "Color",
+            "labelPriority": "Priority",
+            "helpTextPriority": "Labels with a higher priority are shown first.",
+            "labelActive": "Active",
+            "labelValidFrom": "Valid from",
+            "labelValidTo": "Valid to",
+            "messageSaveError": "The label could not be saved."
+        }
+    }
+}
